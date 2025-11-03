@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portail - Favoris</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Background video layer -->
+  <video id="bg-video" class="bg-video" autoplay muted loop playsinline aria-hidden="true"></video>
+
+  <header>
+    <h1>Portail</h1>
+    <div class="header-actions">
+      <input id="search" placeholder="Rechercher favoris..." />
+      <!-- Barre de recherche Google large -->
+      <form id="google-search" class="google-search" action="#" onsubmit="return false;">
+        <input id="google-search-input" placeholder="Recherche Google..." aria-label="Recherche Google" />
+        <button type="submit">🔎</button>
+      </form>
+      <button id="btn-calculator" title="Calculatrice">🧮</button>
+      <button id="btn-settings" title="Paramètres">⚙️</button>
+      <button id="btn-export">Exporter</button>
+      <button id="btn-import">Importer</button>
+      <button id="btn-sample">Charger échantillon</button>
+      <button id="btn-help" title="Aide & Raccourcis clavier" class="icon-btn" type="button">
+        <span class="info-icon">i</span>
+      </button>
+	<!-- ... -->
+<button id="btn-help" title="Aide & Raccourcis clavier" class="icon-btn" type="button">
+  <span class="info-icon">i</span>
+</button>
+
+<!-- AJOUT -->
+<button id="btn-music" title="Lecteur YouTube">🎵</button>
+<!-- ... -->
+
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Catégories</h2>
+      <div class="category-controls">
+        <input id="new-category-name" placeholder="Nouvelle catégorie" />
+        <button id="btn-add-category">Ajouter</button>
+      </div>
+      <ul id="categories" class="categories"></ul>
+    </aside>
+
+    <main class="main">
+      <div class="toolbar">
+        <h2 id="current-category-title">Tous les favoris</h2>
+        <div>
+          <button id="btn-add-bookmark">Ajouter favori</button>
+          <input id="new-sub-name" placeholder="Nouvelle sous-rubrique" style="display:none; margin-left:8px; padding:6px; border-radius:6px;" />
+          <button id="btn-create-sub" style="display:none; margin-left:6px;">Créer sous-rubrique</button>
+        </div>
+      </div>
+
+      <ul id="bookmarks" class="bookmarks"></ul>
+    </main>
+  </div>
+
+  <!-- Modale Favori (ajout/édition) -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <button type="button" id="btn-close-modal" class="close-btn" title="Fermer">✖</button>
+      <h3 id="modal-title">Ajouter</h3>
+      <form id="modal-form">
+        <input id="bm-title" placeholder="Titre" required />
+        <input id="bm-url" placeholder="URL (https://...)" required />
+        <select id="bm-category"></select>
+        <!-- Le sélecteur de sous-rubrique est injecté par JS juste après -->
+        <textarea id="bm-notes" placeholder="Notes (optionnel)"></textarea>
+        <div class="modal-actions">
+          <button type="submit">Enregistrer</button>
+          <button type="button" id="btn-cancel">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Calculatrice scientifique modal -->
+  <div id="calc-modal" class="modal hidden">
+    <div class="modal-content">
+      <button type="button" id="btn-close-calc" class="close-btn" title="Fermer">✖</button>
+      <h3>Calculatrice</h3>
+      <div class="calc">
+        <input id="calc-input" placeholder="Entrez une expression (ex: sin(0.5)+2^3)" />
+        <div class="calc-buttons">
+          <button data-insert="7">7</button><button data-insert="8">8</button><button data-insert="9">9</button><button data-insert="/">÷</button>
+          <button data-insert="4">4</button><button data-insert="5">5</button><button data-insert="6">6</button><button data-insert="*">×</button>
+          <button data-insert="1">1</button><button data-insert="2">2</button><button data-insert="3">3</button><button data-insert="-">−</button>
+          <button data-insert="0">0</button><button data-insert=".">.</button><button data-insert="(">(</button><button data-insert=")">)</button>
+        </div>
+        <div class="calc-scientific">
+          <button data-insert="sin(">sin</button>
+          <button data-insert="cos(">cos</button>
+          <button data-insert="tan(">tan</button>
+          <button data-insert="ln(">ln</button>
+          <button data-insert="log10(">log10</button>
+          <button data-insert="sqrt(">√</button>
+          <button data-insert="^">^</button>
+        </div>
+        <div class="calc-actions">
+          <button id="btn-calc-eval">Calculer</button>
+          <button id="btn-calc-clear">Effacer</button>
+        </div>
+        <div id="calc-result" class="calc-result">Résultat : <span id="calc-result-value">-</span></div>
+        <ul id="calc-history" class="calc-history"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panneau Paramètres -->
+  <div id="settings-panel" class="settings-panel hidden">
+    <section>
+      <button id="btn-close-settings" class="close-btn" title="Fermer">✖</button>
+      <h3>Paramètres</h3>
+
+      <div class="setting-row">
+        <label for="theme-select">Thème</label>
+        <select id="theme-select">
+          <option value="dark">Sombre (par défaut)</option>
+          <option value="light">Clair</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <label for="bg-url">Image de fond (URL)</label>
+        <input id="bg-url" type="url" placeholder="https://..." />
+        <button id="btn-apply-bg">Appliquer</button>
+        <button id="btn-import-bg" title="Importer depuis l'ordinateur">Importer locale</button>
+      </div>
+
+      <div class="setting-row">
+        <label for="bg-type">Type de fond</label>
+        <select id="bg-type">
+          <option value="image">Image</option>
+          <option value="video">Vidéo</option>
+        </select>
+      </div>
+
+      <div class="setting-row" id="bg-video-url-row" style="display:none">
+        <label for="bg-video-url">URL vidéo</label>
+        <input id="bg-video-url" placeholder="https://exemple.com/video.mp4" />
+        <button id="btn-apply-video">Appliquer</button>
+      </div>
+
+      <div class="setting-row" id="bg-video-import-row" style="display:none">
+        <button id="btn-import-video">Importer une vidéo locale</button>
+        <div id="bg-video-preview" class="bg-preview">Aucune vidéo</div>
+      </div>
+
+      <div class="setting-row" id="bg-video-options-row" style="display:none">
+        <label><input type="checkbox" id="bg-video-muted" checked /> Muet</label>
+        <label><input type="checkbox" id="bg-video-loop" checked /> Boucle</label>
+      </div>
+
+      <div class="setting-row">
+        <label for="bg-size">Mode d'adaptation</label>
+        <select id="bg-size">
+          <option value="cover">Remplir (cover)</option>
+          <option value="contain">Adapter (contain)</option>
+        </select>
+        <label for="bg-attachment">Fixer l'image</label>
+        <select id="bg-attachment">
+          <option value="fixed">Fixe</option>
+          <option value="scroll">Défile</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <div id="bg-preview" class="bg-preview">Aucune image</div>
+      </div>
+
+      <div class="setting-row">
+        <button id="btn-remove-bg">Supprimer le background</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Fichiers cachés -->
+  <input id="file-input" type="file" accept="application/json" style="display:none" />
+  <input id="bg-file-input" type="file" accept="image/*" style="display:none" />
+  <input id="bg-video-file-input" type="file" accept="video/*" style="display:none" />
+
+  <!-- Modale Aide (classes isolées) -->
+  <div id="help-modal" class="help-modal" aria-hidden="true">
+    <div class="help-modal-content">
+      <button class="help-close" aria-label="Fermer">×</button>
+      <h2>Raccourcis clavier & Aide</h2>
+      <ul>
+        <li><strong>Ctrl + K</strong> → Rechercher un favori</li>
+        <li><strong>G</strong> → Focus sur la barre Google</li>
+        <li><strong>T</strong> → Basculer thème clair/sombre</li>
+        <li><strong>N</strong> → Nouveau favori</li>
+        <li><strong>?</strong> → Ouvrir cette aide</li>
+      </ul>
+      <p style="margin-top:1em;font-size:0.9em;opacity:0.8;">
+        Conseil : pour changer le fond, allez dans ⚙️ Paramètres → Fond.
+      </p>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+<!-- AJOUT : mini-lecteur flottant -->
+<div id="music-player" class="music hidden" aria-hidden="true">
+  <div class="music-bar">
+    <strong>Lecteur</strong>
+    <div class="spacer"></div>
+    <button id="btn-music-close" class="icon-ghost" title="Fermer">✖</button>
+  </div>
+  <iframe id="music-iframe" frameborder="0"
+    allow="autoplay; encrypted-media; picture-in-picture"
+    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+  </iframe>
+</div>
+
+</body>
+</html>
